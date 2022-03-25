@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Models;
+using WebAPI.DataAccess;
 
-    public class DBContext : DbContext
+public class DBContext : DbContext
     {
         public DBContext (DbContextOptions<DBContext> options)
             : base(options)
         {
         }
 
-        public DbSet<WebAPI.Models.Department> Department { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
-        public DbSet<WebAPI.Models.Employee> Employee { get; set; }
+        public DbSet<Employee> Employees { get; set; }
 
     //protected override void OnModelCreating(ModelBuilder modelBuilder)
     //{

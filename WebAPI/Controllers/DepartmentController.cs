@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.DataAccess;
 
-namespace WebAPI.Models
+namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -21,16 +22,16 @@ namespace WebAPI.Models
 
         // GET: api/Department
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Department>>> GetDepartment()
+        public async Task<ActionResult<IReadOnlyList<Department>>> GetDepartment()
         {
-            return await _context.Department.ToListAsync();
+            return await _context.Departments.ToListAsync();
         }
 
         // GET: api/Department/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Department>> GetDepartment(int id)
         {
-            var department = await _context.Department.FindAsync(id);
+            var department = await _context.Departments.FindAsync(id);
 
             if (department == null)
             {
@@ -76,7 +77,7 @@ namespace WebAPI.Models
         [HttpPost]
         public async Task<ActionResult<Department>> PostDepartment(Department department)
         {
-            _context.Department.Add(department);
+            _context.Departments.Add(department);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);
@@ -86,13 +87,13 @@ namespace WebAPI.Models
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
-            var department = await _context.Department.FindAsync(id);
+            var department = await _context.Departments.FindAsync(id);
             if (department == null)
             {
                 return NotFound();
             }
 
-            _context.Department.Remove(department);
+            _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -100,7 +101,7 @@ namespace WebAPI.Models
 
         private bool DepartmentExists(int id)
         {
-            return _context.Department.Any(e => e.DepartmentId == id);
+            return _context.Departments.Any(e => e.DepartmentId == id);
         }
     }
 }

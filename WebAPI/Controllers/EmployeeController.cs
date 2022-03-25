@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Models;
 using System.IO;
-
+using WebAPI.DataAccess;
 
 namespace WebAPI.Controllers
 {
@@ -29,8 +28,8 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployee()
         {
-            var empList =  (from emp in _context.Employee
-                             join Department d in _context.Department
+         /*   var empList =  (from emp in _context.Employees
+                             join Department d in _context.Departments
                              on emp.DepartmentId equals d.DepartmentId
                              select new
                              {
@@ -38,16 +37,16 @@ namespace WebAPI.Controllers
                                  EmployeeName = emp.EmployeeName,
                                  DepartmentName = d.DepartmentName
                              });
-
+         */
             //return await empList.ToListAsync();
-            return await _context.Employee.Include(d=>d.Department.DepartmentName).ToListAsync();
+            return await _context.Employees.Include(x=>x.Deparment).ToListAsync();
         }
         
         // GET: api/Employee/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(int id)
         {
-            var employee = await _context.Employee.FindAsync(id);
+            var employee = await _context.Employees.FindAsync(id);
 
             if (employee == null)
             {
@@ -93,7 +92,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
         {
-            _context.Employee.Add(employee);
+            _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);
@@ -103,13 +102,13 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
-            var employee = await _context.Employee.FindAsync(id);
+            var employee = await _context.Employees.FindAsync(id);
             if (employee == null)
             {
                 return NotFound();
             }
 
-            _context.Employee.Remove(employee);
+            _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -117,7 +116,7 @@ namespace WebAPI.Controllers
 
         private bool EmployeeExists(int id)
         {
-            return _context.Employee.Any(e => e.EmployeeId == id);
+            return _context.Employees.Any(e => e.EmployeeId == id);
         }
 
     

@@ -15,5 +15,6 @@ namespace WebAPI.Models
         public int DepartmentId { get; set; }
         public Department Department  { get; set; }
 
+        public ICollection<Department> DeparmentList { get; set; }
     }
 }
